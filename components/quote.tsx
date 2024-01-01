@@ -55,7 +55,7 @@ const Quote = ({ initQuote }: { initQuote: QuoteType }) => {
   }
 
   return (
-    <div className="flex items-center relative z-10 max-w-5xl w-full text-left font-mono text-sm lg:flex">
+    <div className="flex items-center relative z-10 max-w-5xl w-full text-left text-sm lg:flex">
       <span
         className={`absolute w-12 h-12 -top-4 -left-16`}
         style={{ backgroundImage: "url(/quote.svg)" }}

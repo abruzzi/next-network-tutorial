@@ -24,7 +24,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen justify-center items-center p-24 bg-slate-900 text-slate-100">
-      <Quote quote={quotes[0]} />
+      <Quote initQuote={quotes[0]} />
     </main>
   );
 }

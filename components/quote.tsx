@@ -45,7 +45,7 @@ const Quote = ({ initQuote }: { initQuote: QuoteType }) => {
   };
 
   const quoteToDisplay = quotes[index];
-  console.log(quoteToDisplay, quotes.length)
+
   if (isLoading) {
     return <Skeleton />;
   }

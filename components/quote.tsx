@@ -5,13 +5,15 @@ import { QuoteType } from "@/app/page";
 import React, { useState } from "react";
 import useSWR, { preload, useSWRConfig } from "swr";
 
+import { Spinner } from "@/components/spinner";
+import { Skeleton } from "@/components/skeleton";
+
 async function fetchNewQuotes(): Promise<QuoteType[]> {
   const res = await fetch(
     "https://api.quotable.io/quotes/random?tags=famous-quotes&limit=3"
   );
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
 
@@ -25,7 +27,6 @@ const Quote = ({ initQuote }: { initQuote: QuoteType }) => {
     data: quotes,
     isLoading,
     isValidating,
-    error = [],
   } = useSWR("quotes", fetchNewQuotes, {
     fallbackData: [initQuote],
   });
@@ -44,29 +45,29 @@ const Quote = ({ initQuote }: { initQuote: QuoteType }) => {
   };
 
   const quoteToDisplay = quotes[index];
+  console.log(quoteToDisplay, quotes.length)
+  if (isLoading) {
+    return <Skeleton />;
+  }
 
-  if (isLoading || isValidating) {
-    return (
-      <div
-        className={`absolute w-16 h-16 animate-spin`}
-        style={{ backgroundImage: "url(/circle.svg)" }}
-      >
-      </div>
-    );
+  if (isValidating) {
+    return <Spinner />;
   }
 
   return (
     <div className="flex items-center relative z-10 max-w-5xl w-full text-left font-mono text-sm lg:flex">
-      <div
-        className={`absolute w-12 h-12 -top-4 -left-12`}
+      <span
+        className={`absolute w-12 h-12 -top-4 -left-16`}
         style={{ backgroundImage: "url(/quote.svg)" }}
-      ></div>
+      ></span>
       <blockquote className="text-4xl flex-grow">
         {quoteToDisplay.content}
-        <span className="italic font-light text-base">
-          {" "}
-          -- {quoteToDisplay.author}
-        </span>
+        <div>
+          <span className="italic font-light text-base inline-block">
+            {" "}
+            -- {quoteToDisplay.author}
+          </span>
+        </div>
       </blockquote>
       <button
         onMouseEnter={handleHover}

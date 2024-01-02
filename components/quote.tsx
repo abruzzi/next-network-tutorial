@@ -7,32 +7,25 @@ import useSWR, { preload, useSWRConfig } from "swr";
 
 import { Spinner } from "@/components/spinner";
 import { Skeleton } from "@/components/skeleton";
+import { getQuotes } from "@/components/getQuotes";
 
-async function fetchNewQuotes(): Promise<QuoteType[]> {
-  const res = await fetch(
-    "https://api.quotable.io/quotes/random?tags=famous-quotes&limit=3"
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
-
-const Quote = ({ initQuote }: { initQuote: QuoteType }) => {
+const Quote = ({ initQuotes }: { initQuotes: QuoteType[] }) => {
   const { mutate } = useSWRConfig();
   const [index, setIndex] = useState(0);
   const {
     data: quotes,
     isLoading,
     isValidating,
-  } = useSWR("quotes", fetchNewQuotes, {
-    fallbackData: [initQuote],
+  } = useSWR("quotes", getQuotes, {
+    fallbackData: initQuotes,
+    revalidateOnMount: false,
   });
 
-  const handleHover = async () => {
-    preload("quotes", fetchNewQuotes);
+  const handleHover = () => {
+    if (index < quotes.length - 1) {
+      return;
+    }
+    preload("quotes", getQuotes);
   };
 
   const handleClick = () => {
